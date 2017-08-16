@@ -1,0 +1,147 @@
+{% load get_number %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>博客园</title>
+    <link type="text/css" rel="stylesheet" href="/static/css/blog-common.css">
+    <link id="MainCss" type="text/css" rel="stylesheet" href="/static/css/bundle-SimpleBlue.css">
+    <link type="text/css" rel="stylesheet" href="/static/css/133379.css">
+    <link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="/static/css/bundle-SimpleBlue-mobile.css">
+    {% block css %}{% endblock %}
+    <style>
+        .hide{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <a name="top"></a>
+    <div id="home">
+        <div id="header">
+            <div id="blogTitle">
+                <!--done-->
+                <div class="title"><a id="Header1_HeaderTitle" class="headermaintitle" href="">{{ blog.title }}</a></div>
+                <div class="subtitle">{{blog.subtitle}}</div>
+            </div>
+            <!--end: blogTitle 博客的标题和副标题 -->
+            <div id="navigator">
+                <ul id="navList">
+                    <li id="nav_sitehome"><a id="blog_nav_sitehome" class="menu" href="/">博客首页</a></li>
+                    <li id="nav_myhome"><a id="blog_nav_myhome" class="menu" href="/blog/{{ blog.site }}.html">个人首页</a></li>
+                    <li id="nav_admin"><a id="blog_nav_admin" class="menu" rel="nofollow" href="/backend/index.html">管理</a></li>
+                </ul>
+                <!--end: blogStats -->
+            </div>
+            <!--end: navigator 博客导航栏 -->
+        </div>
+        <!--end: header 头部 -->
+        <div id="main">
+            <div id="mainContent">
+                <div class="forFlow">
+                    <!--done-->
+                    {% block content %}{% endblock %}
+
+                </div>
+                <!--end: forFlow -->
+            </div>
+            <!--end: mainContent 主体内容容器-->
+            <div id="sideBar">
+                <div id="sideBarMain">
+                    <!--done-->
+                    <div class="newsItem">
+                        <h3 class="catListTitle">公告</h3>
+                        <div id="blog-news">
+                            <h4 style="padding-top:10px">{{ blog.ad }}</h4>
+                            <div id="profile_block">昵称：<a href="/blog/{{ blog.site }}.html">{{blog.user.nickname}}</a>
+                                <br>邮箱：<a href="" title="">{{ blog.user.email }}</a>
+                                <br>粉丝：<a href="">{{ blog.user.fans.count }}</a>
+                                <br>关注：<a href="">{{ blog.user.f.count }}</a>
+                                <div id="p_b_follow"><a href="" onclick="follow()">+加关注</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="leftcontentcontainer">
+                        <div id="blog-sidecolumn">
+                            <div id="sidebar_search" class="sidebar-block"></div>
+                            <div id="sidebar_toptags" class="sidebar-block">
+                                <div class="catListTag">
+                                    <h3 class="catListTitle">我的标签</h3>
+                                    <ul>
+                                        {% for tag in tag_list %}
+                                        <li><a href="/blog/{{ blog.site }}/tag/{{ tag.nid }}.html">{{ tag.title }}({{ tag.article_set.count }})</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="sidebar_categories">
+                                <div class="catListPostCategory">
+                                    <h3 class="catListTitle">随笔分类</h3>
+                                    <ul>
+                                    {% for tag in category_list %}
+                                    <li><a href="/blog/{{ blog.site }}/category/{{ tag.nid }}.html">{{ tag.title }}({{ tag.article_set.count }})</a></li>
+                                    {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="catListPostArchive">
+                                    <h3 class="catListTitle">随笔档案</h3>
+                                    <ul>
+                                        {% for tag in date_list %}
+                                        <li><a id="CatList_LinkList_1_Link_0" href="/blog/{{ blog.site }}/date/{{ tag.ctime }}.html">{{ tag.ctime}}({{ tag.num}})</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="sidebar_scorerank" class="sidebar-block">
+                            </div>
+                            <div id="sidebar_recentcomments" class="sidebar-block">
+                                <div id="recent_comments_wrap">
+                                    <div class="catListComment">
+                                        <h3 class="catListTitle">最新评论</h3>
+                                        {% for item in recent_comments %}
+                                        <div id="RecentCommentsBlock">
+                                            <ul>
+                                                {% if item.reply %}
+                                                <li class="recent_comment_title"><a href="/blog/{{ item.article.blog.site }}/{{ item.article.nid }}.html#{{ item.nid }}">{% get_number_index item recent_comments %}. {{ item.article.title }}</a></li>
+                                                <li class="recent_comment_body">@{{ item.reply.user.nickname }}{{ item.content| safe }}</li>
+                                                <li class="recent_comment_author">--{{ item.user.nickname }}</li>
+                                                    {% else %}
+                                                <li class="recent_comment_title"><a href="/blog/{{ item.article.blog.site }}/{{ item.article.nid }}.html#{{ item.nid }}">{% get_number_index item recent_comments %}. {{ item.article.title }}</a></li>
+                                                <li class="recent_comment_body">{{ item.content|safe }}</li>
+                                                <li class="recent_comment_author">--{{ item.user.nickname }}</li>
+                                                    {% endif %}
+
+                                            </ul>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end: sideBarMain -->
+            </div>
+            <!--end: sideBar 侧边栏容器 -->
+            <div class="clear"></div>
+        </div>
+        <!--end: main -->
+        <div class="clear"></div>
+        <div id="footer">
+            <!--done-->
+            Copyright ©2017 陈津龙
+        </div>
+        <!--end: footer -->
+    </div>
+    <!--end: home 自定义的最大容器 -->
+
+    <script async="" src="/static/js/analytics.js" type="text/javascript"></script>
+    <script src="/static/js/blog-common.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/static/js/jquery-1.12.4.js"></script>
+    {% block js %}{% endblock %}
+</body>
+
+</html>

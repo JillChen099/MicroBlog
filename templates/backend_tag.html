@@ -1,0 +1,151 @@
+{% extends 'backend_layout.html' %}
+{% block css %}
+
+{% endblock %}
+{% block conent %}
+    <ol class="breadcrumb">
+        <li><a href="#">标签管理</a></li>
+        <li class="active">标签列表</li>
+    </ol>
+    <div>
+        <div class="row" style="padding: 20px 5px;">
+            <form class="form-horizontal">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-1 control-label">标签名称</label>
+
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control" id="nickname" placeholder="请输入标签名称">
+                        </div>
+                        <div class="col-xs-3">
+                            <input type="button" class="btn btn-primary" id="addCategory" value="添 加">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div style="height: 35px;background-color: #f5f5f5;line-height: 35px;padding: 0 15px;">
+            <i class="fa fa-table" aria-hidden="true"></i>
+            标签列表
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>标签</th>
+                <th>文章个数</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+                {% for row in result %}
+                    <tr >
+                        <td><input style="border: 0;" type="text" value="{{ row.title }}" id = "{{ row.nid }}" onchange="Change(event);"></td>
+                        <td>{{ row.counts }}</td>
+                        <td>
+                            <a class="btn btn-danger btn-xs" id = "{{ row.nid }}" onclick="Delete(event);">
+                                <i class="fa fa-times" aria-hidden="true" ></i>
+                                删除
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="clearfix">
+            <ul class="pagination right" style="margin-top: 0">
+                {{ page_html }}
+            </ul>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+        <script type="text/javascript">
+        function Delete(event) {
+            var nid =  event.target.id;
+            $.ajax({
+
+                url: "/backend/delete-tag.html",
+
+                data: {nid: nid},
+
+                type: 'POST',
+
+                success: function (redata) {
+                    var obj = jQuery.parseJSON(redata);
+                    if (obj.status){
+                        $(event.target).parent().parent().remove(); //删除标签
+                    }
+
+
+                }
+
+            });
+
+
+        }
+        function Change(event) {
+            var nid =  event.target.id;
+            var value = event.target.value;
+            console.log(value);
+            $.ajax({
+
+                url: "/backend/change-tag.html",
+
+                data: {nid:nid, value:value},
+
+                type: 'POST',
+
+                success: function (redata) {
+                    var obj = jQuery.parseJSON(redata);
+                }
+
+            });
+
+        }
+        $(function () {
+            $('#addCategory').click(function () {
+                var data = $('#nickname').val();
+                if (data){
+                    $.ajax({
+                        url:"/backend/add-tag.html",
+                        data: {data:data},
+                        type: "POST",
+                        success:function (redata) {
+                            var obj = jQuery.parseJSON(redata);
+                            if(obj.status){
+                                html = '<tr>'
+                                        +'<td>'
+                                        +'<input style="border: 0;" type="text" value=' +data + ' id =' +obj.Data.nid
+                                        + ' onchange="Change(event);">'
+                                        +'</td>'
+                                        +'<td>0</td>'
+                                        + '<td>'
+                                        +'<a class="btn btn-danger btn-xs" id = '+obj.Data.nid + ' onclick="Delete(event);">'
+                                        +'<i class="fa fa-times" aria-hidden="true" ></i>'
+                                        + '删除</a>'
+                                        + '</td>'
+                                        + '</tr>';
+                                console.log(html);
+                                $('#tbody').prepend(html);
+
+                            }
+
+                        }
+
+
+                    })
+
+                }
+
+            })
+
+        })
+    </script>
+
+{% endblock %}

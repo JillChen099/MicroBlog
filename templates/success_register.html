@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/static/plugins/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/static/plugins/font-awesome/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/static/css/edmure.css"/>
+    <link rel="stylesheet" href="/static/css/commons.css"/>
+    <link rel="stylesheet" href="/static/css/account.css"/>
+    <style>
+        .login_button{
+            display: inline-block;
+            position: absolute;
+            left: 50%;
+            margin-left: -71px;}
+        p {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<div class="login">
+    <div style="font-size: 25px; font-weight: bold;text-align: center;">
+        注册成功！
+    </div>
+    <br/>
+    <br/>
+    <div class="form-group">
+        <p>用户名:{{ message.username  }}</p>
+        <p>密码：{{ message.password }}</p>
+    </div>
+    <div style="position: relative;">
+        <a  href="/login.html" class="btn btn-primary btn-lg active login_button" role="button">点我进行登录</a>
+    </div>
+    <br/>
+    <br/>
+</div>
+</body>
+</html>

@@ -1,0 +1,287 @@
+{% extends 'home_layout2.html' %}
+
+{% load get_number %}
+
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="/static/plugins/kindeditor/plugins/code/prettify.css">
+{% endblock %}
+{% block content %}
+                    <a class="hide" id ="article_nid" >{{ article.nid }}</a>
+                    <div id="post_detail">
+                        <div id="topics">
+                            <div class="post">
+                                <h1 class="postTitle"><a id="cb_post_title_url" class="postTitle2" href="">{{ article.title }}</a>
+								</h1>
+                                <div class="clear"></div>
+                                <div class="postBody">
+                                	<div>{{ article.articledetail.content|safe }} <!--文章内容-->
+                                    </div>
+                                    <div id="MySignature" style="display: block;">
+                                        <div id="AllanboltSignature">
+                                            <div style="border-bottom: #e0e0e0 1px dashed; border-left: #e0e0e0 1px dashed; padding: 10px; font-family: 微软雅黑; font-size: 11px; border-top: #e0e0e0 1px dashed; border-right: #e0e0e0 1px dashed; " id="PSignature">
+                                                <div style="float:left;width:10%;">
+                                                    <img src="/static/images/o_Warning.png" style="width:70px;height:70px">
+                                                </div>
+                                                <div style="float:left;width:90%;padding-top:10px;">
+                                                    作者：<a href="/blog/{{ blog.site }}.html" target="">{{ blog.user.nickname }}</a>
+                                                    <br> 出处：
+                                                    <a href="/blog/{{ blog.site }}.html" target="">http://www.noofa.top/blog/{{ blog.site }}.html</a>
+                                                    <br> 本文版权归作者和Eden博客共有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接。
+                                                    <br>
+                                                </div>
+                                                <div style="clear:both;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div id="blog_post_info_block">
+                                        <div id="blog_post_info">
+                                            <div id="author_profile">
+                                                <div id="author_profile_info" class="author_profile_info">
+                                                    <a href="/blog/{{ blog.site }}.html" target="">
+                                                        <img src="/{{ blog.user.avatar }}" class="author_avatar" alt="">
+                                                    </a>
+                                                    <div id="author_profile_detail" class="author_profile_info">
+                                                        <a href="/blog/{{ blog.site }}.html">{{blog.user.nickname}}</a>
+                                                        <br>
+                                                        <a href="">关注 - {{ blog.user.f.count }}</a>
+                                                        <br>
+                                                        <a href="">粉丝 - {{ blog.user.fans.count }}</a>
+                                                    </div>
+                                                </div>
+                                                <div class="clear"></div>
+                                                <div id="author_profile_honor"></div>
+                                                <div id="author_profile_follow">
+                                                    <a href="" onclick="follow();">+加关注</a>
+                                                </div>
+                                            </div>
+                                            <a name="110" ></a>
+                                            <div id="div_digg">
+                                                <div class="diggit" id = "up"  onclick="digg_bury(event)" >
+                                                    {{ article.up_count }} <!--文章点赞-->
+                                                </div>
+                                                <div class="buryit" id = "down"  onclick="digg_bury(event)" >
+                                                      {{ article.down_count }} <!--文章点踩-->
+                                                </div>
+                                                <div class="clear"></div>
+                                                <div class="diggword hide" id="digg_tips" style="color: red;">请您先<a href="/login.html">登录</a></div>
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                                <div class="postDesc">
+                                    posted @ {{ article.create_time|date:"Y-m-d H:i:s" }} {{ blog.user.nickname }} 阅读({{ article.read_count }})
+                                    评论<div style="display:inline-block" id = "comment_counts">({{ article.comment_count }})</div>
+                                    {% ifequal request.session.user_info.nid blog.user.nid  %}
+                                    <a href="/backend/edit-article-{{ article.nid }}.html" rel="nofollow">编辑</a>
+                                    {% endifequal %}
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--end: topics 文章、评论容器-->
+                    </div>
+
+                    <div id="blog-comments-placeholder">
+	                        <div class="feedback_area_title">评论列表</div>
+                            {% for comment in comment_list %}
+    	                        <div class="feedbackItem">
+
+    	                            <div class="feedbackListSubtitle">
+                                        {% if request.session.user_info %}
+    	                                    {% ifequal request.session.user_info.nid comment.user.nid %}
+                                                <div class="feedbackManage">
+                                                    &nbsp;&nbsp;
+                                                    <span class="comment_actions" >
+                                                        <a href="javascript:void(0);" id ={{ comment.nid  }}  onclick="delete_comment(event);">删除</a>
+                                                    </span>
+                                                </div>
+                                            {% else %}
+                                                <div class="feedbackManage">
+                                                &nbsp;&nbsp;
+                                                    <span class="comment_actions" >
+                                                        <a href="#111" id ={{ comment.nid  }} comment_user= {{ comment.user.nickname }} onclick="reply_comment(event);">回复</a>
+                                                    </span>
+
+    	                                        </div>
+                                            {% endifequal %}
+                                        {% endif %}
+    	                                <a href="/blog/{{ blog.site }}/{{ article.nid }}.html#{{ comment.nid }}" class="layer">{% get_number_index comment comment_list %}楼</a>
+    	                                <a name="{{ comment.nid }}" ></a>
+    	                                <span class="comment_date">{{ comment.create_time |date:"Y-m-d H:i:s" }}</span>
+    	                                 <a id="a_comment_author_{{ comment.nid }}" href="/blog/{{ comment.user.blog.site }}.html" >{{ comment.user.nickname }}</a>
+    	                            </div>
+    	                            <div class="feedbackCon">
+    	                                <div id="comment_body_{{ comment.nid }}" class="blog_comment_body">
+
+                                                {% if comment.reply %}
+                                                <div class="reply-user">
+                                                    <a href="#{{ comment.reply.nid }}" title="查看所回复的评论">@</a>
+                                                    {{ comment.reply.user.nickname }}</div>
+                                                {% endif %}
+                                                {{ comment.content |safe }}
+                                        </div>
+    	                                <div class="comment_vote">
+    	                                	<a href="" class="comment_digg" onclick="">支持(0)</a>
+    	                                	<a href="" class="comment_bury" onclick="">反对(0)</a>
+    	                                </div>
+    	                            </div>
+    	                        </div>
+                            {% endfor %}
+
+                    </div>
+
+
+                    <div id="comment_form" class="commentform">
+                        <div id="comment_form_container">
+                            {% if not request.session.user_info %}
+                                <div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="/login.html" class="underline">登录</a> 或 <a rel="nofollow" href="/register.html" class="underline" >注册</a>，<a href="/">访问</a>网站首页。
+                                </div>
+                            {% else %}
+								<div id="commentform_title">发表评论</div>
+								<div class="commentbox_main">
+									<div class="commentbox_title">
+										<div class="commentbox_title_left">评论内容：</div>
+									</div>
+									<div class="clear"></div>
+                                    <a class="hide" id ="reply_nid"></a><!--获取要回复的评论的nid-->
+                                    <a class="hide" id ="comment_user"></a><!--获取要回复的评论的作者-->
+                                    <a name="111" ></a>
+									<textarea id="tbCommentBody" name="content" ></textarea>
+								</div>
+								<p id="commentbox_opt">
+									<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论" onclick="submit_comment();">
+								</p>
+							{% endif %}
+                        </div>
+                        <script type="text/javascript">
+                        </script>
+                    </div>
+{% endblock %}
+
+{% block js %}
+    <script charset="utf-8" src="/static/plugins/kindeditor/kindeditor-all-min.js"></script>
+    <script src="/static/plugins/kindeditor/plugins/code/prettify.js" type="text/javascript"></script>
+    <script charset="utf-8" src="/static/plugins/kindeditor/lang/zh_CN.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
+    <script>
+        var editor;
+        KindEditor.ready(function (K) {
+            editor = K.create('textarea[name="content"]', {
+
+                resizeType: 1,
+                allowPreviewEmoticons: false,
+                allowImageUpload: false,
+                items: [
+                    'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+                    'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+                    'insertunorderedlist', '|', 'emoticons', 'image', 'link'],
+                afterBlur:function(){this.sync();},
+                afterCreate:function(){this.sync();}
+            });
+
+        });
+        //定义文章点赞点踩函数
+        function digg_bury(event) {
+            //获取当前触发函数的标签对象,判断是赞还是踩
+            var message =$(event.target).attr("id");
+            //获取当前文章的nid
+            var nid = $("#article_nid").text();
+            //提交
+            $.ajax({
+
+                url: "/article_updown/",
+
+                data: {nid:nid, message:message},
+
+                type: 'POST',
+
+                success: function (callback) {
+                    var obj = jQuery.parseJSON(callback);
+                     if (obj.status){
+                         $("#up").text(obj.data.up_count);
+                         $("#down").text(obj.data.down_count);
+
+                     }else{
+                         $("#digg_tips").removeClass("hide");
+                     }
+                }
+
+            });
+
+        }
+
+        //回复评论函数
+        function reply_comment(event) {
+            var reply_comment_nid = $(event.target).attr("id");
+            var comment_user = $(event.target).attr("comment_user");
+            $("#reply_nid").text(reply_comment_nid); //保留待回复评论的nid
+            $("#comment_user").text(comment_user);//保留待评论的发言用户
+            var message = "@"+comment_user;  //添加<br />可以进行换行
+            editor.focus().appendHtml(message);//获得焦点在文字的最后，
+
+
+
+        }
+        //评论提交函数
+        function submit_comment() {
+            var reply_comment_nid = $("#reply_nid").text();
+            var comment_user =$("#comment_user").text();
+            var article_nid = $("#article_nid").text();
+            var reply_comment = $("#tbCommentBody").val();
+            console.log(reply_comment);
+            $.ajax({
+                url:"/submit_comment/",
+                data:{reply_comment_nid:reply_comment_nid,article_nid:article_nid,reply_comment:reply_comment,comment_user:comment_user},
+                type:"POST",
+                success:function (callback) {
+                    var obj = jQuery.parseJSON(callback);
+                    if (obj.status){
+                        location.reload("/{{ blog.site }}/{{ article.nid }}.html#111")
+                    }
+
+                }
+
+
+            });
+
+    }
+        //删除评论函数
+        function delete_comment(event) {
+        var reply_comment_nid = $(event.target).attr("id");
+        var article_nid = $("#article_nid").text();
+        $.ajax({
+            url:"/delete_comment/",
+            data:{reply_comment_nid:reply_comment_nid,article_nid:article_nid},
+            type:"POST",
+            success:function (callback) {
+                var obj = jQuery.parseJSON(callback);
+                if(obj.status){
+                    $(event.target).parent().parent().parent().parent().remove();
+                    $("#comment_counts").text("("+obj.data.comment_counts+")"); //页面评论数更新
+
+                }else {
+                    alert("删除评论错误,请稍后再试！")
+                }
+
+            }
+
+        })
+
+        }
+        //框架加载后，执行函数
+{#        $(function () {#}
+{#            //记录滚动条到cookie，页面刷新时自动加载。#}
+{#            $(window).scroll(function () {#}
+{#                var scrolltop = $(window).scrollTop();#}
+{#                $.cookie("scrolltop",scrolltop,{path:"/{{ blog.site }}/{{ article.nid }}.html"});#}
+{#            });#}
+{#            var newscrolltop = $.cookie("scrolltop");#}
+{#            $(window).scrollTop(newscrolltop);#}
+{##}
+{#        })#}
+            prettyPrint();
+
+    </script>
+{% endblock %}
