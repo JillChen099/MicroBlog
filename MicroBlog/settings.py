@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 """
 Django settings for EdmureBlog project.
 
@@ -23,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '%q_ke6ok7im7x_-=0mdz+9*!rxvraey(xje=92f$(an4s)-7ls'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['wupeiqi.com','127.0.0.1']
 
@@ -145,5 +146,55 @@ STATICFILES_DIRS = (
 #     },
 # }
 
+
 SESSION_COOKIE_AGE = 60 * 60 * 24
 SESSION_SAVE_EVERY_REQUEST = True
+
+
+# logging日志配置
+
+LOGGING = {
+ 'version': 1,
+ 'disable_existing_loggers': True,
+ 'formatters': {#日志格式
+     'standard': {
+        'format': '%(asctime)s [%(levelname)s]- %(message)s'
+        }
+    },
+ 'filters': {#过滤器
+     'require_debug_false': {
+                        '()': 'django.utils.log.RequireDebugFalse',
+                            }
+    },
+ 'handlers':{#处理器
+    'null': {
+        'level': 'DEBUG',
+        'class': 'logging.NullHandler',
+    },
+    'debug': {#记录到日志文件(需要创建对应的目录，否则会出错)
+      'level':'DEBUG',
+      'class':'logging.handlers.RotatingFileHandler',
+      'filename': os.path.join(BASE_DIR, "logs",'debug.log'),#日志输出文件
+      'maxBytes':1024*1024*5,#文件大小
+      'backupCount': 5,#备份份数
+      'formatter':'standard',#使用哪种formatters日志格式
+            },
+    'console':{#输出到控制台
+      'level': 'DEBUG',
+      'class': 'logging.StreamHandler',
+      'formatter': 'standard',
+             },
+    },
+ 'loggers':{#logging管理器
+        'django':{
+              'handlers': ['console'],
+              'level': 'DEBUG',
+              'propagate': False
+        },
+        'django.request': {
+              'handlers': ['debug',],
+              'level': 'ERROR',
+              'propagate': True,
+        },
+    }
+}

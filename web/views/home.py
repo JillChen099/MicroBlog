@@ -13,7 +13,6 @@ def index(request, *args, **kwargs):
     :param request:
     :return:
     """
-
     article_type_list = models.Article.type_choices
     # [
     #     (1, "Python"),
