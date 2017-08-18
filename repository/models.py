@@ -83,9 +83,10 @@ class Article(models.Model):
 
     type_choices = [
         (1, "Python"),
-        (2, "Linux运维"),
-        (3, "网络工程"),
+        (2, "Linux"),
+        (3, "计算机和网络基础"),
         (4, "网络安全"),
+        (5, "其他")
     ]
 
     article_type_id = models.IntegerField(verbose_name="文章类型表",choices=type_choices, default=None)
