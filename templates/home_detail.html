@@ -191,7 +191,7 @@
             //提交
             $.ajax({
 
-                url: "/article_updown/",
+                url: "/blog/article_updown/",
 
                 data: {nid:nid, message:message},
 
@@ -232,7 +232,7 @@
             var reply_comment = $("#tbCommentBody").val();
             console.log(reply_comment);
             $.ajax({
-                url:"/submit_comment/",
+                url:"/blog/submit_comment/",
                 data:{reply_comment_nid:reply_comment_nid,article_nid:article_nid,reply_comment:reply_comment,comment_user:comment_user},
                 type:"POST",
                 success:function (callback) {
@@ -252,7 +252,7 @@
         var reply_comment_nid = $(event.target).attr("id");
         var article_nid = $("#article_nid").text();
         $.ajax({
-            url:"/delete_comment/",
+            url:"/blog/delete_comment/",
             data:{reply_comment_nid:reply_comment_nid,article_nid:article_nid},
             type:"POST",
             success:function (callback) {

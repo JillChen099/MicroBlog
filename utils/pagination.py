@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 
 
 class Pagination(object):
-    def __init__(self, current_page, data_count, per_page_count=10, pager_num=7):
+    def __init__(self, current_page, data_count, per_page_count=4, pager_num=7):
         try:
             if current_page =='0':
                 self.current_page = 1

@@ -1,4 +1,4 @@
-# -*- coding:utf-8 -*-
+#-*- coding=utf-8 -*-
 """
 Django settings for EdmureBlog project.
 
@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '%q_ke6ok7im7x_-=0mdz+9*!rxvraey(xje=92f$(an4s)-7ls'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['wupeiqi.com','127.0.0.1']
 
@@ -146,12 +146,8 @@ STATICFILES_DIRS = (
 #     },
 # }
 
-
 SESSION_COOKIE_AGE = 60 * 60 * 24
 SESSION_SAVE_EVERY_REQUEST = True
-
-
-# logging日志配置
 
 LOGGING = {
  'version': 1,
